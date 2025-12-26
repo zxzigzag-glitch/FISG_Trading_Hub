@@ -31,6 +31,10 @@ interface MarketSnapshot {
 
 export default function HomeScreen() {
   const colorScheme = useColorScheme();
+  const theme = colorScheme ?? 'light';
+  const themeColors = Colors[theme];
+  const subtleBorderColor = theme === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.1)';
+  const subtleFill = theme === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)';
   const [refreshing, setRefreshing] = useState(false);
 
   const checklist: ChecklistItem[] = [
@@ -92,7 +96,7 @@ export default function HomeScreen() {
         <View style={styles.header}>
           <View>
             <ThemedText type="title">Welcome back, Araya K.</ThemedText>
-            <Text style={styles.subtitle}>
+            <Text style={[styles.subtitle, { color: themeColors.text }]}>
               Clear journey: Register → KYC → Open Account → Deposit → Trade → Rewards.
             </Text>
           </View>
@@ -105,13 +109,14 @@ export default function HomeScreen() {
                 key={item.id}
                 style={[
                   styles.checklistItem,
-                  { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground },
+                  { backgroundColor: themeColors.cardBackground, borderColor: subtleBorderColor },
                 ]}
               >
                 <View style={styles.checklistLeft}>
                   <View
                     style={[
                       styles.statusIcon,
+                      { backgroundColor: subtleFill },
                       item.status === 'completed' && styles.statusIconCompleted,
                       item.status === 'active' && styles.statusIconActive,
                     ]}
@@ -127,16 +132,16 @@ export default function HomeScreen() {
                   </View>
                   <View style={styles.checklistContent}>
                     <ThemedText type="defaultSemiBold">{item.title}</ThemedText>
-                    <Text style={styles.checklistSubtitle}>{item.subtitle}</Text>
+                    <Text style={[styles.checklistSubtitle, { color: themeColors.text }]}>{item.subtitle}</Text>
                     {item.status === 'completed' && (
-                      <Text style={styles.checklistStatus}>{item.subtitle}</Text>
+                      <Text style={[styles.checklistStatus, { color: themeColors.text }]}>{item.subtitle}</Text>
                     )}
                   </View>
                 </View>
                 <IconSymbol
                   name="chevron.right"
                   size={20}
-                  color={Colors[colorScheme ?? 'light'].icon}
+                  color={themeColors.icon}
                 />
               </TouchableOpacity>
             ))}
@@ -146,7 +151,7 @@ export default function HomeScreen() {
         {/* Market Continue Button */}
         <View style={styles.section}>
           <TouchableOpacity
-            style={[styles.continueButton, { backgroundColor: Colors[colorScheme ?? 'light'].tint }]}
+            style={[styles.continueButton, { backgroundColor: themeColors.tint }]}
           >
             <Text style={styles.continueButtonText}>Market</Text>
             <Text style={styles.continueButtonLabel}>Continue</Text>
@@ -160,11 +165,14 @@ export default function HomeScreen() {
             {quickActions.map((action) => (
               <TouchableOpacity
                 key={action.id}
-                style={[styles.actionCard, { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }]}
+                style={[
+                  styles.actionCard,
+                  { backgroundColor: themeColors.cardBackground, borderColor: subtleBorderColor },
+                ]}
               >
                 <Text style={styles.actionIcon}>{action.icon}</Text>
                 <ThemedText type="defaultSemiBold">{action.title}</ThemedText>
-                <Text style={styles.actionSubtitle}>{action.subtitle}</Text>
+                <Text style={[styles.actionSubtitle, { color: themeColors.text }]}>{action.subtitle}</Text>
                 {action.balance && (
                   <ThemedText type="defaultSemiBold" style={styles.actionBalance}>
                     {action.balance}
@@ -189,7 +197,14 @@ export default function HomeScreen() {
             <ThemedText type="subtitle">Market Snapshot</ThemedText>
             <View style={styles.timeframeTabs}>
               {['15m', '1h', '4h'].map((tf) => (
-                <Text key={tf} style={[styles.timeframeTab, tf === '15m' && styles.timeframeTabActive]}>
+                <Text
+                  key={tf}
+                  style={[
+                    styles.timeframeTab,
+                    { color: themeColors.text },
+                    tf === '15m' && styles.timeframeTabActive,
+                  ]}
+                >
                   {tf}
                 </Text>
               ))}
@@ -199,7 +214,10 @@ export default function HomeScreen() {
           {marketSnapshot.map((market, index) => (
             <View
               key={index}
-              style={[styles.marketCard, { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }]}
+              style={[
+                styles.marketCard,
+                { backgroundColor: themeColors.cardBackground, borderColor: subtleBorderColor },
+              ]}
             >
               <View style={styles.marketInfo}>
                 <ThemedText type="defaultSemiBold">{market.symbol}</ThemedText>
@@ -219,25 +237,28 @@ export default function HomeScreen() {
           <View style={styles.sectionHeader}>
             <ThemedText type="subtitle">What's new</ThemedText>
             <TouchableOpacity>
-              <Text style={[styles.viewAll, { color: Colors[colorScheme ?? 'light'].tint }]}>View all</Text>
+              <Text style={[styles.viewAll, { color: themeColors.tint }]}>View all</Text>
             </TouchableOpacity>
           </View>
 
           {news.map((item) => (
             <TouchableOpacity
               key={item.id}
-              style={[styles.newsCard, { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }]}
+              style={[
+                styles.newsCard,
+                { backgroundColor: themeColors.cardBackground, borderColor: subtleBorderColor },
+              ]}
             >
               <Text style={styles.newsIcon}>{item.icon}</Text>
               <View style={styles.newsContent}>
                 <ThemedText type="defaultSemiBold" numberOfLines={2}>
                   {item.title}
                 </ThemedText>
-                <Text style={styles.newsCategory}>
+                <Text style={[styles.newsCategory, { color: themeColors.text }]}>
                   {item.category} • {item.date}
                 </Text>
-                <View style={[styles.newsCategoryBadge, { backgroundColor: Colors[colorScheme ?? 'light'].tint + '20' }]}>
-                  <Text style={[styles.newsCategoryText, { color: Colors[colorScheme ?? 'light'].tint }]}>
+                <View style={[styles.newsCategoryBadge, { backgroundColor: themeColors.tint + '20' }]}>
+                  <Text style={[styles.newsCategoryText, { color: themeColors.tint }]}>
                     {item.category}
                   </Text>
                 </View>
@@ -248,7 +269,7 @@ export default function HomeScreen() {
 
         {/* Rewards Section */}
         <View style={styles.section}>
-          <View style={[styles.rewardsCard, { backgroundColor: Colors[colorScheme ?? 'light'].tint }]}>
+          <View style={[styles.rewardsCard, { backgroundColor: themeColors.tint }]}>
             <View style={styles.rewardsHeader}>
               <Text style={styles.rewardsTitle}>Rewards</Text>
               <Text style={styles.rewardsPoints}>220 pts</Text>

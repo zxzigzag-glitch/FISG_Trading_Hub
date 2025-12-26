@@ -20,6 +20,10 @@ type ModalType = 'deposit' | 'withdraw' | 'transfer' | null;
 
 export default function WalletScreen() {
   const colorScheme = useColorScheme();
+  const theme = colorScheme ?? 'light';
+  const themeColors = Colors[theme];
+  const subtleBorderColor = theme === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.1)';
+  const subtleFill = theme === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)';
   const [balance] = useState(1571.25);
   const [activeModal, setActiveModal] = useState<ModalType>(null);
   const [kycApproved] = useState(true);
@@ -171,7 +175,7 @@ export default function WalletScreen() {
       <ThemedView style={styles.container}>
         <View style={styles.modalHeader}>
           <TouchableOpacity onPress={() => setActiveModal(null)}>
-            <IconSymbol name="chevron.left" size={24} color={Colors[colorScheme ?? 'light'].text} />
+            <IconSymbol name="chevron.left" size={24} color={themeColors.text} />
           </TouchableOpacity>
           <ThemedText type="title">Deposit</ThemedText>
           <View style={{ width: 24 }} />
@@ -188,8 +192,9 @@ export default function WalletScreen() {
                   key={method}
                   style={[
                     styles.optionButton,
+                    { backgroundColor: subtleFill },
                     depositMethod === method && {
-                      backgroundColor: Colors[colorScheme ?? 'light'].tint,
+                      backgroundColor: themeColors.tint,
                     },
                   ]}
                   onPress={() => setDepositMethod(method)}
@@ -197,6 +202,7 @@ export default function WalletScreen() {
                   <Text
                     style={[
                       styles.optionText,
+                      { color: themeColors.text },
                       depositMethod === method && styles.optionTextActive,
                     ]}
                   >
@@ -215,8 +221,9 @@ export default function WalletScreen() {
                   key={currency}
                   style={[
                     styles.optionButton,
+                    { backgroundColor: subtleFill },
                     depositCurrency === currency && {
-                      backgroundColor: Colors[colorScheme ?? 'light'].tint,
+                      backgroundColor: themeColors.tint,
                     },
                   ]}
                   onPress={() => setDepositCurrency(currency)}
@@ -224,6 +231,7 @@ export default function WalletScreen() {
                   <Text
                     style={[
                       styles.optionText,
+                      { color: themeColors.text },
                       depositCurrency === currency && styles.optionTextActive,
                     ]}
                   >
@@ -238,11 +246,11 @@ export default function WalletScreen() {
             <ThemedText type="subtitle">Amount</ThemedText>
             <TextInput
               style={[styles.input, { 
-                backgroundColor: Colors[colorScheme ?? 'light'].cardBackground,
-                color: Colors[colorScheme ?? 'light'].text,
+                backgroundColor: themeColors.cardBackground,
+                color: themeColors.text,
               }]}
               placeholder="Enter amount"
-              placeholderTextColor={Colors[colorScheme ?? 'light'].tabIconDefault}
+              placeholderTextColor={themeColors.tabIconDefault}
               value={depositAmount}
               onChangeText={setDepositAmount}
               keyboardType="decimal-pad"
@@ -250,7 +258,7 @@ export default function WalletScreen() {
           </View>
 
           <TouchableOpacity
-            style={[styles.submitButton, { backgroundColor: Colors[colorScheme ?? 'light'].tint }]}
+            style={[styles.submitButton, { backgroundColor: themeColors.tint }]}
             onPress={handleDeposit}
           >
             <Text style={styles.submitButtonText}>Confirm deposit</Text>
@@ -265,7 +273,7 @@ export default function WalletScreen() {
       <ThemedView style={styles.container}>
         <View style={styles.modalHeader}>
           <TouchableOpacity onPress={() => setActiveModal(null)}>
-            <IconSymbol name="chevron.left" size={24} color={Colors[colorScheme ?? 'light'].text} />
+            <IconSymbol name="chevron.left" size={24} color={themeColors.text} />
           </TouchableOpacity>
           <ThemedText type="title">Withdraw</ThemedText>
           <View style={{ width: 24 }} />
@@ -279,9 +287,9 @@ export default function WalletScreen() {
               <Text style={styles.warningIcon}>!</Text>
               <View style={styles.warningContent}>
                 <ThemedText type="defaultSemiBold">Withdrawal is locked</ThemedText>
-                <Text style={styles.warningText}>Complete KYC to unlock withdrawals.</Text>
+                <Text style={[styles.warningText, { color: themeColors.text }]}>Complete KYC to unlock withdrawals.</Text>
                 <TouchableOpacity style={styles.warningButton}>
-                  <Text style={[styles.warningButtonText, { color: Colors[colorScheme ?? 'light'].tint }]}>
+                  <Text style={[styles.warningButtonText, { color: themeColors.tint }]}>
                     Go to KYC
                   </Text>
                 </TouchableOpacity>
@@ -297,8 +305,9 @@ export default function WalletScreen() {
                   key={method}
                   style={[
                     styles.optionButton,
+                    { backgroundColor: subtleFill },
                     withdrawMethod === method && {
-                      backgroundColor: Colors[colorScheme ?? 'light'].tint,
+                      backgroundColor: themeColors.tint,
                     },
                     !kycApproved && styles.optionButtonDisabled,
                   ]}
@@ -308,6 +317,7 @@ export default function WalletScreen() {
                   <Text
                     style={[
                       styles.optionText,
+                      { color: themeColors.text },
                       withdrawMethod === method && styles.optionTextActive,
                     ]}
                   >
@@ -326,8 +336,9 @@ export default function WalletScreen() {
                   key={currency}
                   style={[
                     styles.optionButton,
+                    { backgroundColor: subtleFill },
                     withdrawCurrency === currency && {
-                      backgroundColor: Colors[colorScheme ?? 'light'].tint,
+                      backgroundColor: themeColors.tint,
                     },
                     !kycApproved && styles.optionButtonDisabled,
                   ]}
@@ -337,6 +348,7 @@ export default function WalletScreen() {
                   <Text
                     style={[
                       styles.optionText,
+                      { color: themeColors.text },
                       withdrawCurrency === currency && styles.optionTextActive,
                     ]}
                   >
@@ -351,11 +363,11 @@ export default function WalletScreen() {
             <ThemedText type="subtitle">Amount</ThemedText>
             <TextInput
               style={[styles.input, { 
-                backgroundColor: Colors[colorScheme ?? 'light'].cardBackground,
-                color: Colors[colorScheme ?? 'light'].text,
+                backgroundColor: themeColors.cardBackground,
+                color: themeColors.text,
               }]}
               placeholder="Enter amount"
-              placeholderTextColor={Colors[colorScheme ?? 'light'].tabIconDefault}
+              placeholderTextColor={themeColors.tabIconDefault}
               value={withdrawAmount}
               onChangeText={setWithdrawAmount}
               keyboardType="decimal-pad"
@@ -366,7 +378,7 @@ export default function WalletScreen() {
           <TouchableOpacity
             style={[
               styles.submitButton,
-              { backgroundColor: Colors[colorScheme ?? 'light'].tint },
+              { backgroundColor: themeColors.tint },
               !kycApproved && styles.submitButtonDisabled,
             ]}
             onPress={handleWithdraw}
@@ -384,7 +396,7 @@ export default function WalletScreen() {
       <ThemedView style={styles.container}>
         <View style={styles.modalHeader}>
           <TouchableOpacity onPress={() => setActiveModal(null)}>
-            <IconSymbol name="chevron.left" size={24} color={Colors[colorScheme ?? 'light'].text} />
+            <IconSymbol name="chevron.left" size={24} color={themeColors.text} />
           </TouchableOpacity>
           <ThemedText type="title">Transfer</ThemedText>
           <View style={{ width: 24 }} />
@@ -401,8 +413,9 @@ export default function WalletScreen() {
                   key={account}
                   style={[
                     styles.optionButton,
+                    { backgroundColor: subtleFill },
                     transferFrom === account && {
-                      backgroundColor: Colors[colorScheme ?? 'light'].tint,
+                      backgroundColor: themeColors.tint,
                     },
                   ]}
                   onPress={() => {
@@ -413,6 +426,7 @@ export default function WalletScreen() {
                   <Text
                     style={[
                       styles.optionText,
+                      { color: themeColors.text },
                       transferFrom === account && styles.optionTextActive,
                     ]}
                   >
@@ -431,8 +445,9 @@ export default function WalletScreen() {
                   key={account}
                   style={[
                     styles.optionButton,
+                    { backgroundColor: subtleFill },
                     transferTo === account && {
-                      backgroundColor: Colors[colorScheme ?? 'light'].tint,
+                      backgroundColor: themeColors.tint,
                     },
                   ]}
                   onPress={() => {
@@ -443,6 +458,7 @@ export default function WalletScreen() {
                   <Text
                     style={[
                       styles.optionText,
+                      { color: themeColors.text },
                       transferTo === account && styles.optionTextActive,
                     ]}
                   >
@@ -461,7 +477,7 @@ export default function WalletScreen() {
                   key={currency}
                   style={[
                     styles.optionButton,
-                    { backgroundColor: Colors[colorScheme ?? 'light'].tint },
+                    { backgroundColor: themeColors.tint },
                   ]}
                 >
                   <Text style={[styles.optionText, styles.optionTextActive]}>
@@ -476,11 +492,11 @@ export default function WalletScreen() {
             <ThemedText type="subtitle">Amount</ThemedText>
             <TextInput
               style={[styles.input, { 
-                backgroundColor: Colors[colorScheme ?? 'light'].cardBackground,
-                color: Colors[colorScheme ?? 'light'].text,
+                backgroundColor: themeColors.cardBackground,
+                color: themeColors.text,
               }]}
               placeholder="Enter amount"
-              placeholderTextColor={Colors[colorScheme ?? 'light'].tabIconDefault}
+              placeholderTextColor={themeColors.tabIconDefault}
               value={transferAmount}
               onChangeText={setTransferAmount}
               keyboardType="decimal-pad"
@@ -488,7 +504,7 @@ export default function WalletScreen() {
           </View>
 
           <TouchableOpacity
-            style={[styles.submitButton, { backgroundColor: Colors[colorScheme ?? 'light'].tint }]}
+            style={[styles.submitButton, { backgroundColor: themeColors.tint }]}
             onPress={handleTransfer}
           >
             <Text style={styles.submitButtonText}>Confirm transfer</Text>
@@ -506,7 +522,7 @@ export default function WalletScreen() {
           <ThemedText style={styles.subtitle}>All features enabled</ThemedText>
         </View>
         {/* Balance Card */}
-        <View style={[styles.balanceCard, { backgroundColor: Colors[colorScheme ?? 'light'].tint }]}>
+        <View style={[styles.balanceCard, { backgroundColor: themeColors.tint }]}>
           <Text style={styles.balanceLabel}>Available Balance</Text>
           <Text style={styles.balanceAmount}>${balance.toFixed(2)}</Text>
           <Text style={styles.balanceSubtext}>History</Text>
@@ -515,34 +531,34 @@ export default function WalletScreen() {
         {/* Quick Actions */}
         <View style={styles.actionsContainer}>
           <TouchableOpacity
-            style={[styles.actionCard, { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }]}
+            style={[styles.actionCard, { backgroundColor: themeColors.cardBackground, borderColor: subtleBorderColor }]}
             onPress={() => setActiveModal('deposit')}
           >
             <Text style={styles.actionIcon}>➕</Text>
             <ThemedText type="defaultSemiBold">Deposit</ThemedText>
-            <Text style={styles.actionDesc}>Amount → Method → Status</Text>
+            <Text style={[styles.actionDesc, { color: themeColors.text }]}>Amount → Method → Status</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.actionCard, { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }]}
+            style={[styles.actionCard, { backgroundColor: themeColors.cardBackground, borderColor: subtleBorderColor }]}
             onPress={() => setActiveModal('withdraw')}
           >
             <Text style={styles.actionIcon}>➖</Text>
             <ThemedText type="defaultSemiBold">Withdraw</ThemedText>
-            <Text style={[styles.actionDesc, !kycApproved && { color: '#ef4444' }]}>
+            <Text style={[styles.actionDesc, { color: themeColors.text }, !kycApproved && { color: '#ef4444' }]}>
               {kycApproved ? 'Approved users only' : 'Blocked until KYC Approved'}
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.actionCard, { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }]}
+            style={[styles.actionCard, { backgroundColor: themeColors.cardBackground, borderColor: subtleBorderColor }]}
             onPress={() => setActiveModal('transfer')}
           >
             <Text style={styles.actionIcon}>⇄</Text>
             <ThemedText type="defaultSemiBold">Transfer</ThemedText>
-            <Text style={styles.actionDesc}>Move funds between MT4 and MT5</Text>
+            <Text style={[styles.actionDesc, { color: themeColors.text }]}>Move funds between MT4 and MT5</Text>
             <TouchableOpacity style={styles.openButton}>
-              <Text style={[styles.openButtonText, { color: Colors[colorScheme ?? 'light'].tint }]}>Open</Text>
+              <Text style={[styles.openButtonText, { color: themeColors.tint }]}>Open</Text>
             </TouchableOpacity>
           </TouchableOpacity>
         </View>
@@ -552,22 +568,25 @@ export default function WalletScreen() {
           <View style={styles.sectionHeader}>
             <ThemedText type="subtitle">Recent History</ThemedText>
             <TouchableOpacity>
-              <Text style={[styles.viewAll, { color: Colors[colorScheme ?? 'light'].tint }]}>View all</Text>
+              <Text style={[styles.viewAll, { color: themeColors.tint }]}>View all</Text>
             </TouchableOpacity>
           </View>
 
           {transactions.map((transaction) => (
             <View
               key={transaction.id}
-              style={[styles.transactionCard, { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }]}
+              style={[
+                styles.transactionCard,
+                { backgroundColor: themeColors.cardBackground, borderColor: subtleBorderColor },
+              ]}
             >
               <View style={styles.transactionLeft}>
-                <Text style={styles.transactionIcon}>{getTransactionIcon(transaction.type)}</Text>
+                <Text style={[styles.transactionIcon, { color: themeColors.text }]}>{getTransactionIcon(transaction.type)}</Text>
                 <View style={styles.transactionDetails}>
                   <ThemedText type="defaultSemiBold">
                     {transaction.type} • {transaction.method}
                   </ThemedText>
-                  <Text style={styles.transactionDate}>
+                  <Text style={[styles.transactionDate, { color: themeColors.text }]}>
                     {transaction.date}
                     {transaction.reason && ` • Reason: ${transaction.reason}`}
                   </Text>

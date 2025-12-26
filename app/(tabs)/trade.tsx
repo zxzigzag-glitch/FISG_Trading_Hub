@@ -20,6 +20,10 @@ interface Position {
 
 export default function TradeScreen() {
   const colorScheme = useColorScheme();
+  const theme = colorScheme ?? 'light';
+  const themeColors = Colors[theme];
+  const subtleBorderColor = theme === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.1)';
+  const subtleFill = theme === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)';
   const [selectedAccount, setSelectedAccount] = useState('MT4');
   const [selectedSymbol, setSelectedSymbol] = useState('EURUSD');
   const [volume, setVolume] = useState('0.01');
@@ -99,8 +103,9 @@ export default function TradeScreen() {
                 key={account}
                 style={[
                   styles.accountButton,
+                  { backgroundColor: subtleFill },
                   selectedAccount === account && {
-                    backgroundColor: Colors[colorScheme ?? 'light'].tint,
+                    backgroundColor: themeColors.tint,
                   },
                 ]}
                 onPress={() => setSelectedAccount(account)}
@@ -108,6 +113,7 @@ export default function TradeScreen() {
                 <Text
                   style={[
                     styles.accountButtonText,
+                    { color: themeColors.text },
                     selectedAccount === account && styles.accountButtonTextActive,
                   ]}
                 >
@@ -127,8 +133,9 @@ export default function TradeScreen() {
                 key={symbol}
                 style={[
                   styles.symbolButton,
+                  { backgroundColor: subtleFill },
                   selectedSymbol === symbol && {
-                    backgroundColor: Colors[colorScheme ?? 'light'].tint,
+                    backgroundColor: themeColors.tint,
                   },
                 ]}
                 onPress={() => setSelectedSymbol(symbol)}
@@ -136,6 +143,7 @@ export default function TradeScreen() {
                 <Text
                   style={[
                     styles.symbolButtonText,
+                    { color: themeColors.text },
                     selectedSymbol === symbol && styles.symbolButtonTextActive,
                   ]}
                 >
@@ -147,10 +155,10 @@ export default function TradeScreen() {
         </View>
 
         {/* Current Price */}
-        <View style={[styles.priceCard, { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }]}>
+        <View style={[styles.priceCard, { backgroundColor: themeColors.cardBackground }] }>
           <ThemedText type="subtitle">Quote</ThemedText>
           <ThemedText type="title" style={styles.currentPrice}>{currentPrice}</ThemedText>
-          <Text style={styles.priceUpdate}>Live • Updates every 10s • 15m</Text>
+          <Text style={[styles.priceUpdate, { color: themeColors.text }]}>Live • Updates every 10s • 15m</Text>
         </View>
 
         {/* Volume Input */}
@@ -158,8 +166,8 @@ export default function TradeScreen() {
           <ThemedText type="subtitle">Volume (Lots)</ThemedText>
           <TextInput
             style={[styles.input, { 
-              backgroundColor: Colors[colorScheme ?? 'light'].cardBackground,
-              color: Colors[colorScheme ?? 'light'].text,
+              backgroundColor: themeColors.cardBackground,
+              color: themeColors.text,
             }]}
             placeholder="0.01"
             placeholderTextColor={Colors[colorScheme ?? 'light'].tabIconDefault}
@@ -174,8 +182,8 @@ export default function TradeScreen() {
           <ThemedText type="subtitle">Stop Loss (optional)</ThemedText>
           <TextInput
             style={[styles.input, { 
-              backgroundColor: Colors[colorScheme ?? 'light'].cardBackground,
-              color: Colors[colorScheme ?? 'light'].text,
+              backgroundColor: themeColors.cardBackground,
+              color: themeColors.text,
             }]}
             placeholder="—"
             placeholderTextColor={Colors[colorScheme ?? 'light'].tabIconDefault}
@@ -189,8 +197,8 @@ export default function TradeScreen() {
           <ThemedText type="subtitle">Take Profit (optional)</ThemedText>
           <TextInput
             style={[styles.input, { 
-              backgroundColor: Colors[colorScheme ?? 'light'].cardBackground,
-              color: Colors[colorScheme ?? 'light'].text,
+              backgroundColor: themeColors.cardBackground,
+              color: themeColors.text,
             }]}
             placeholder="—"
             placeholderTextColor={Colors[colorScheme ?? 'light'].tabIconDefault}
@@ -204,8 +212,8 @@ export default function TradeScreen() {
           <ThemedText type="subtitle">Comment (optional)</ThemedText>
           <TextInput
             style={[styles.input, { 
-              backgroundColor: Colors[colorScheme ?? 'light'].cardBackground,
-              color: Colors[colorScheme ?? 'light'].text,
+              backgroundColor: themeColors.cardBackground,
+              color: themeColors.text,
             }]}
             placeholder="Add note..."
             placeholderTextColor={Colors[colorScheme ?? 'light'].tabIconDefault}
@@ -231,21 +239,21 @@ export default function TradeScreen() {
         </View>
 
         {/* Account Info */}
-        <View style={[styles.accountInfo, { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }]}>
+        <View style={[styles.accountInfo, { backgroundColor: themeColors.cardBackground }]}>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Balance</Text>
+            <Text style={[styles.infoLabel, { color: themeColors.text }]}>Balance</Text>
             <ThemedText type="defaultSemiBold">${accountInfo.balance.toFixed(2)}</ThemedText>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Equity</Text>
+            <Text style={[styles.infoLabel, { color: themeColors.text }]}>Equity</Text>
             <ThemedText type="defaultSemiBold">${accountInfo.equity.toFixed(2)}</ThemedText>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Margin</Text>
+            <Text style={[styles.infoLabel, { color: themeColors.text }]}>Margin</Text>
             <ThemedText type="defaultSemiBold">${accountInfo.margin.toFixed(2)}</ThemedText>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Free Margin</Text>
+            <Text style={[styles.infoLabel, { color: themeColors.text }]}>Free Margin</Text>
             <ThemedText type="defaultSemiBold">${accountInfo.freeMargin.toFixed(2)}</ThemedText>
           </View>
         </View>
@@ -256,7 +264,7 @@ export default function TradeScreen() {
             💡 This is a UI simulator for review. Not connected to real MT execution.
           </ThemedText>
           <TouchableOpacity style={styles.mtLink}>
-            <Text style={[styles.mtLinkText, { color: Colors[colorScheme ?? 'light'].tint }]}>
+            <Text style={[styles.mtLinkText, { color: themeColors.tint }]}>
               Open MT4/MT5
             </Text>
           </TouchableOpacity>
@@ -274,20 +282,23 @@ export default function TradeScreen() {
           {positions.map((position) => (
             <View
               key={position.id}
-              style={[styles.positionCard, { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }]}
+              style={[
+                styles.positionCard,
+                { backgroundColor: themeColors.cardBackground, borderColor: subtleBorderColor },
+              ]}
             >
               <View style={styles.positionHeader}>
                 <View style={styles.positionInfo}>
                   <ThemedText type="defaultSemiBold">
                     {position.type === 'BUY' ? '▲' : '▼'} {position.symbol}
                   </ThemedText>
-                  <Text style={styles.positionDetails}>
+                  <Text style={[styles.positionDetails, { color: themeColors.text }]}>
                     {position.type} • {position.lots} lots
                   </Text>
-                  <Text style={styles.positionTime}>
+                  <Text style={[styles.positionTime, { color: themeColors.text }]}>
                     Open {position.openTime} @ {position.openPrice}
                   </Text>
-                  <Text style={styles.positionSLTP}>
+                  <Text style={[styles.positionSLTP, { color: themeColors.text }]}>
                     SL {position.sl ?? '—'} • TP {position.tp ?? '—'}
                   </Text>
                 </View>
@@ -296,10 +307,10 @@ export default function TradeScreen() {
                     {position.profit >= 0 ? '+' : ''}{position.profit.toFixed(2)}
                   </ThemedText>
                   <TouchableOpacity
-                    style={[styles.closeButton, { borderColor: Colors[colorScheme ?? 'light'].tint }]}
+                    style={[styles.closeButton, { borderColor: themeColors.tint }]}
                     onPress={() => handleClosePosition(position.id)}
                   >
-                    <Text style={[styles.closeButtonText, { color: Colors[colorScheme ?? 'light'].tint }]}>
+                    <Text style={[styles.closeButtonText, { color: themeColors.tint }]}>
                       Close
                     </Text>
                   </TouchableOpacity>

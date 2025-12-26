@@ -2,13 +2,17 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useColorScheme, useThemePreference } from '@/hooks/use-color-scheme';
 import React, { useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 
 export default function ProfileScreen() {
   const colorScheme = useColorScheme();
-  const [theme, setTheme] = useState<'system' | 'dark' | 'light'>('system');
+  const resolvedScheme = colorScheme ?? 'light';
+  const themeColors = Colors[resolvedScheme];
+  const subtleBorderColor = resolvedScheme === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.1)';
+  const subtleFill = resolvedScheme === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)';
+  const { preference: themePreference, setPreference: setThemePreference } = useThemePreference();
   const [notifications, setNotifications] = useState({
     all: true,
     system: true,
@@ -95,11 +99,18 @@ export default function ProfileScreen() {
                 key={t}
                 style={[
                   styles.themeButton,
-                  theme === t && { backgroundColor: Colors[colorScheme ?? 'light'].tint },
+                  { backgroundColor: subtleFill },
+                  themePreference === t && { backgroundColor: themeColors.tint },
                 ]}
-                onPress={() => setTheme(t)}
+                onPress={() => setThemePreference(t)}
               >
-                <Text style={[styles.themeButtonText, theme === t && styles.themeButtonTextActive]}>
+                <Text
+                  style={[
+                    styles.themeButtonText,
+                    { color: themeColors.text },
+                    themePreference === t && styles.themeButtonTextActive,
+                  ]}
+                >
                   {t.charAt(0).toUpperCase() + t.slice(1)}
                 </Text>
               </TouchableOpacity>
@@ -110,65 +121,65 @@ export default function ProfileScreen() {
         {/* Quick Actions */}
         <View style={styles.section}>
           <TouchableOpacity
-            style={[styles.menuItem, { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }]}
+            style={[styles.menuItem, { backgroundColor: themeColors.cardBackground, borderColor: subtleBorderColor }]}
             onPress={() => Alert.alert('Learn', 'Opening Learn section...')}
           >
             <Text style={styles.menuIcon}>🎓</Text>
             <View style={styles.menuContent}>
               <ThemedText type="defaultSemiBold">Learn</ThemedText>
-              <Text style={styles.menuDesc}>Courses, quizzes, bookmarks</Text>
+              <Text style={[styles.menuDesc, { color: themeColors.text }]}>Courses, quizzes, bookmarks</Text>
             </View>
             <TouchableOpacity style={styles.menuButton}>
-              <Text style={[styles.menuButtonText, { color: Colors[colorScheme ?? 'light'].tint }]}>Open</Text>
+              <Text style={[styles.menuButtonText, { color: themeColors.tint }]}>Open</Text>
             </TouchableOpacity>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.menuItem, { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }]}
+            style={[styles.menuItem, { backgroundColor: themeColors.cardBackground, borderColor: subtleBorderColor }]}
             onPress={() => Alert.alert('Support', 'Opening support...')}
           >
             <Text style={styles.menuIcon}>?</Text>
             <View style={styles.menuContent}>
               <ThemedText type="defaultSemiBold">Support</ThemedText>
-              <Text style={styles.menuDesc}>Ticket / FAQ (demo)</Text>
+              <Text style={[styles.menuDesc, { color: themeColors.text }]}>Ticket / FAQ (demo)</Text>
             </View>
             <TouchableOpacity style={styles.menuButton}>
-              <Text style={[styles.menuButtonText, { color: Colors[colorScheme ?? 'light'].tint }]}>Open</Text>
+              <Text style={[styles.menuButtonText, { color: themeColors.tint }]}>Open</Text>
             </TouchableOpacity>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.menuItem, { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }]}
+            style={[styles.menuItem, { backgroundColor: themeColors.cardBackground, borderColor: subtleBorderColor }]}
             onPress={() => Alert.alert('Notifications', 'Opening notifications...')}
           >
             <IconSymbol name="bell.fill" size={20} color={Colors[colorScheme ?? 'light'].text} />
             <View style={styles.menuContent}>
               <ThemedText type="defaultSemiBold">Notifications</ThemedText>
-              <Text style={styles.menuDesc}>Manage alerts & updates</Text>
+              <Text style={[styles.menuDesc, { color: themeColors.text }]}>Manage alerts & updates</Text>
             </View>
             <IconSymbol name="chevron.right" size={20} color={Colors[colorScheme ?? 'light'].icon} />
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.menuItem, { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }]}
+            style={[styles.menuItem, { backgroundColor: themeColors.cardBackground, borderColor: subtleBorderColor }]}
             onPress={() => Alert.alert('Rewards', 'Opening rewards...')}
           >
             <IconSymbol name="gift.fill" size={20} color={Colors[colorScheme ?? 'light'].text} />
             <View style={styles.menuContent}>
               <ThemedText type="defaultSemiBold">Rewards & Missions</ThemedText>
-              <Text style={styles.menuDesc}>Earn points, redeem prizes</Text>
+              <Text style={[styles.menuDesc, { color: themeColors.text }]}>Earn points, redeem prizes</Text>
             </View>
             <IconSymbol name="chevron.right" size={20} color={Colors[colorScheme ?? 'light'].icon} />
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.menuItem, { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }]}
+            style={[styles.menuItem, { backgroundColor: themeColors.cardBackground, borderColor: subtleBorderColor }]}
             onPress={() => Alert.alert('Settings', 'Opening settings...')}
           >
             <IconSymbol name="gearshape.fill" size={20} color={Colors[colorScheme ?? 'light'].text} />
             <View style={styles.menuContent}>
               <ThemedText type="defaultSemiBold">Settings</ThemedText>
-              <Text style={styles.menuDesc}>Preferences & security</Text>
+              <Text style={[styles.menuDesc, { color: themeColors.text }]}>Preferences & security</Text>
             </View>
             <IconSymbol name="chevron.right" size={20} color={Colors[colorScheme ?? 'light'].icon} />
           </TouchableOpacity>
@@ -211,18 +222,18 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.footer}>
-          <Text style={styles.footerText}>FISG Trading Hub v1.0.0</Text>
+          <Text style={[styles.footerText, { color: themeColors.text }]}>FISG Trading Hub v1.0.0</Text>
           <View style={styles.footerLinks}>
             <TouchableOpacity>
-              <Text style={[styles.footerLink, { color: Colors[colorScheme ?? 'light'].tint }]}>Terms</Text>
+              <Text style={[styles.footerLink, { color: themeColors.tint }]}>Terms</Text>
             </TouchableOpacity>
-            <Text style={styles.footerDot}>•</Text>
+            <Text style={[styles.footerDot, { color: themeColors.text }]}>•</Text>
             <TouchableOpacity>
-              <Text style={[styles.footerLink, { color: Colors[colorScheme ?? 'light'].tint }]}>Privacy</Text>
+              <Text style={[styles.footerLink, { color: themeColors.tint }]}>Privacy</Text>
             </TouchableOpacity>
-            <Text style={styles.footerDot}>•</Text>
+            <Text style={[styles.footerDot, { color: themeColors.text }]}>•</Text>
             <TouchableOpacity>
-              <Text style={[styles.footerLink, { color: Colors[colorScheme ?? 'light'].tint }]}>Help</Text>
+              <Text style={[styles.footerLink, { color: themeColors.tint }]}>Help</Text>
             </TouchableOpacity>
           </View>
         </View>

@@ -19,6 +19,10 @@ interface Symbol {
 
 export default function MarketScreen() {
   const colorScheme = useColorScheme();
+  const theme = colorScheme ?? 'light';
+  const themeColors = Colors[theme];
+  const subtleBorderColor = theme === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.1)';
+  const subtleFill = theme === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)';
   const [selectedCategory, setSelectedCategory] = useState<MarketCategory>('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [refreshing, setRefreshing] = useState(false);
@@ -74,8 +78,9 @@ export default function MarketScreen() {
               key={category}
               style={[
                 styles.categoryTab,
+                { backgroundColor: subtleFill },
                 selectedCategory === category && {
-                  backgroundColor: Colors[colorScheme ?? 'light'].tint,
+                  backgroundColor: themeColors.tint,
                 },
               ]}
               onPress={() => setSelectedCategory(category)}
@@ -83,6 +88,7 @@ export default function MarketScreen() {
               <Text
                 style={[
                   styles.categoryText,
+                  { color: themeColors.text },
                   selectedCategory === category && styles.categoryTextActive,
                 ]}
               >
@@ -93,12 +99,17 @@ export default function MarketScreen() {
         </ScrollView>
 
         {/* Search Bar */}
-        <View style={[styles.searchContainer, { backgroundColor: Colors[colorScheme ?? 'light'].background }]}>
-          <IconSymbol name="magnifyingglass" size={20} color={Colors[colorScheme ?? 'light'].icon} />
+        <View
+          style={[
+            styles.searchContainer,
+            { backgroundColor: themeColors.cardBackground, borderColor: subtleBorderColor },
+          ]}
+        >
+          <IconSymbol name="magnifyingglass" size={20} color={themeColors.icon} />
           <TextInput
-            style={[styles.searchInput, { color: Colors[colorScheme ?? 'light'].text }]}
+            style={[styles.searchInput, { color: themeColors.text }]}
             placeholder="Search symbol"
-            placeholderTextColor={Colors[colorScheme ?? 'light'].tabIconDefault}
+            placeholderTextColor={themeColors.tabIconDefault}
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
@@ -108,7 +119,10 @@ export default function MarketScreen() {
         {filteredSymbols.map((symbol) => (
           <View
             key={symbol.id}
-            style={[styles.symbolCard, { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }]}
+            style={[
+              styles.symbolCard,
+              { backgroundColor: themeColors.cardBackground, borderColor: subtleBorderColor },
+            ]}
           >
             <View style={styles.symbolHeader}>
               <View style={styles.symbolInfo}>
@@ -116,12 +130,12 @@ export default function MarketScreen() {
                   <IconSymbol
                     name={symbol.isFavorite ? 'star.fill' : 'star'}
                     size={20}
-                    color={symbol.isFavorite ? '#FFD700' : Colors[colorScheme ?? 'light'].icon}
+                    color={symbol.isFavorite ? '#FFD700' : themeColors.icon}
                   />
                 </TouchableOpacity>
                 <View style={styles.symbolDetails}>
                   <ThemedText type="defaultSemiBold">{symbol.name}</ThemedText>
-                  <Text style={styles.category}>{symbol.category}</Text>
+                  <Text style={[styles.category, { color: themeColors.text }]}>{symbol.category}</Text>
                 </View>
               </View>
               <View style={styles.priceInfo}>
@@ -134,12 +148,12 @@ export default function MarketScreen() {
               </View>
             </View>
             <View style={styles.symbolActions}>
-              <TouchableOpacity style={[styles.actionButton, { borderColor: Colors[colorScheme ?? 'light'].tint }]}>
-                <Text style={[styles.actionText, { color: Colors[colorScheme ?? 'light'].tint }]}>Trade</Text>
+              <TouchableOpacity style={[styles.actionButton, { borderColor: themeColors.tint }]}>
+                <Text style={[styles.actionText, { color: themeColors.tint }]}>Trade</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={[styles.actionButton, { borderColor: Colors[colorScheme ?? 'light'].tint }]}>
-                <IconSymbol name="bell" size={16} color={Colors[colorScheme ?? 'light'].tint} />
-                <Text style={[styles.actionText, { color: Colors[colorScheme ?? 'light'].tint }]}>Alert</Text>
+              <TouchableOpacity style={[styles.actionButton, { borderColor: themeColors.tint }]}>
+                <IconSymbol name="bell" size={16} color={themeColors.tint} />
+                <Text style={[styles.actionText, { color: themeColors.tint }]}>Alert</Text>
               </TouchableOpacity>
             </View>
           </View>

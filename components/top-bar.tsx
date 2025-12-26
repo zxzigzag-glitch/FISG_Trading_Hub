@@ -1,11 +1,15 @@
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { Alert, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export function TopBar() {
   const colorScheme = useColorScheme();
+  const theme = colorScheme ?? 'light';
+  const themeColors = Colors[theme];
+  const subtleBorderColor = theme === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.1)';
   const insets = useSafeAreaInsets();
   const [menuVisible, setMenuVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -46,18 +50,18 @@ export function TopBar() {
 
   return (
     <>
-      <View style={[styles.safeArea, { backgroundColor: Colors[colorScheme ?? 'light'].tint, paddingTop: insets.top }]}>
-        <View style={[styles.container, { backgroundColor: Colors[colorScheme ?? 'light'].tint }]}>
+      <View style={[styles.safeArea, { backgroundColor: themeColors.tint, paddingTop: insets.top }]}>
+        <View style={[styles.container, { backgroundColor: themeColors.tint }]}>
           {/* Logo */}
           <TouchableOpacity style={styles.logoContainer}>
-            <View style={styles.logo}>
-              <Text style={styles.logoText}>F</Text>
+            <View style={[styles.logo, { backgroundColor: "#FFFFFF" }]}>
+              <Image source={require('../assets/images/icon.png')} style={styles.logoImage} />
             </View>
           </TouchableOpacity>
 
           {/* Search Bar */}
           <View style={[styles.searchContainer, { backgroundColor: 'rgba(255,255,255,0.2)' }]}>
-            <Text style={styles.searchIcon}>🔍</Text>
+            <Ionicons name="search" size={16} color="#fff" />
             <TextInput
               style={styles.searchInput}
               placeholder="Search prices, news, lessons"
@@ -69,7 +73,7 @@ export function TopBar() {
 
           {/* Notification Icon */}
           <TouchableOpacity style={styles.iconButton}>
-            <Text style={styles.icon}>🔔</Text>
+            <Ionicons name="notifications" size={22} color="#fff" />
             <View style={styles.badge}>
               <Text style={styles.badgeText}>0</Text>
             </View>
@@ -77,7 +81,7 @@ export function TopBar() {
 
           {/* Hamburger Menu */}
           <TouchableOpacity style={styles.iconButton} onPress={() => setMenuVisible(true)}>
-            <Text style={styles.icon}>☰</Text>
+            <Ionicons name="menu" size={24} color="#fff" />
           </TouchableOpacity>
         </View>
       </View>
@@ -94,29 +98,29 @@ export function TopBar() {
           activeOpacity={1} 
           onPress={() => setMenuVisible(false)}
         >
-          <View style={[styles.dropdownMenu, { backgroundColor: Colors[colorScheme ?? 'light'].background }]}>
+          <View style={[styles.dropdownMenu, { backgroundColor: themeColors.background }]}>
             {/* Close Button */}
             <TouchableOpacity 
               style={styles.closeButton}
               onPress={() => setMenuVisible(false)}
             >
-              <Text style={styles.closeIcon}>✕</Text>
+              <Text style={[styles.closeIcon, { color: themeColors.icon }]}>✕</Text>
             </TouchableOpacity>
 
             {/* Account Info */}
             <View style={styles.menuSection}>
-              <Text style={[styles.menuLabel, { color: Colors[colorScheme ?? 'light'].icon }]}>
+              <Text style={[styles.menuLabel, { color: themeColors.icon }]}>
                 Trading Account
               </Text>
-              <Text style={[styles.accountName, { color: Colors[colorScheme ?? 'light'].text }]}>
+              <Text style={[styles.accountName, { color: themeColors.text }]}>
                 {selectedAccount}
               </Text>
-              <Text style={[styles.accountBalance, { color: Colors[colorScheme ?? 'light'].tint }]}>
+              <Text style={[styles.accountBalance, { color: themeColors.tint }]}>
                 ${balance.toFixed(2)}
               </Text>
             </View>
 
-            <View style={styles.divider} />
+            <View style={[styles.divider, { backgroundColor: subtleBorderColor }]} />
 
             {/* Change Account */}
             <TouchableOpacity 
@@ -124,13 +128,13 @@ export function TopBar() {
               onPress={handleAccountChange}
             >
               <Text style={styles.menuItemIcon}>🔄</Text>
-              <Text style={[styles.menuItemText, { color: Colors[colorScheme ?? 'light'].text }]}>
+              <Text style={[styles.menuItemText, { color: themeColors.text }]}>
                 Switch Trading Account
               </Text>
-              <Text style={[styles.menuItemArrow, { color: Colors[colorScheme ?? 'light'].icon }]}>›</Text>
+              <Text style={[styles.menuItemArrow, { color: themeColors.icon }]}>›</Text>
             </TouchableOpacity>
 
-            <View style={styles.divider} />
+            <View style={[styles.divider, { backgroundColor: subtleBorderColor }]} />
 
             {/* Language */}
             <TouchableOpacity 
@@ -139,17 +143,17 @@ export function TopBar() {
             >
               <Text style={styles.menuItemIcon}>🌐</Text>
               <View style={styles.menuItemContent}>
-                <Text style={[styles.menuItemText, { color: Colors[colorScheme ?? 'light'].text }]}>
+                <Text style={[styles.menuItemText, { color: themeColors.text }]}>
                   Language
                 </Text>
-                <Text style={[styles.menuItemSubtext, { color: Colors[colorScheme ?? 'light'].icon }]}>
+                <Text style={[styles.menuItemSubtext, { color: themeColors.icon }]}>
                   {language}
                 </Text>
               </View>
-              <Text style={[styles.menuItemArrow, { color: Colors[colorScheme ?? 'light'].icon }]}>›</Text>
+              <Text style={[styles.menuItemArrow, { color: themeColors.icon }]}>›</Text>
             </TouchableOpacity>
 
-            <View style={styles.divider} />
+            <View style={[styles.divider, { backgroundColor: subtleBorderColor }]} />
 
             {/* Sign Out */}
             <TouchableOpacity 
@@ -192,6 +196,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.2)',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  logoImage: {
+    width: 22,
+    height: 22,
+    resizeMode: 'contain',
   },
   logoText: {
     fontSize: 24,

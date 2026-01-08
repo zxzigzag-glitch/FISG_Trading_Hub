@@ -4,16 +4,15 @@ import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
 import { ThemePreferenceProvider, useColorScheme } from '@/hooks/use-color-scheme';
-
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
+import { I18nProvider } from '@/i18n';
 
 export default function RootLayout() {
   return (
-    <ThemePreferenceProvider defaultPreference="dark">
-      <RootLayoutInner />
-    </ThemePreferenceProvider>
+    <I18nProvider>
+      <ThemePreferenceProvider defaultPreference="dark">
+        <RootLayoutInner />
+      </ThemePreferenceProvider>
+    </I18nProvider>
   );
 }
 
@@ -22,9 +21,10 @@ function RootLayoutInner() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(auth)" />
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal', headerShown: true }} />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>

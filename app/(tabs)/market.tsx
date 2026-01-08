@@ -4,6 +4,7 @@ import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { RefreshControl, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 type MarketCategory = 'All' | 'Forex' | 'Metals' | 'Indices' | 'CFDs';
@@ -26,6 +27,7 @@ export default function MarketScreen() {
   const [selectedCategory, setSelectedCategory] = useState<MarketCategory>('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [refreshing, setRefreshing] = useState(false);
+  const { t } = useTranslation();
   const [symbols, setSymbols] = useState<Symbol[]>([
     { id: '1', name: 'EURUSD', category: 'Forex', price: 1.0899, change: 9.58, isFavorite: true },
     { id: '2', name: 'GBPUSD', category: 'Forex', price: 1.2704, change: -58.97, isFavorite: false },
@@ -68,8 +70,8 @@ export default function MarketScreen() {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
         <View style={styles.header}>
-          <ThemedText type="title">Market</ThemedText>
-          <ThemedText style={styles.subtitle}>Favorites + Alerts</ThemedText>
+          <ThemedText type="title">{t('market:title')}</ThemedText>
+          <ThemedText style={styles.subtitle}>{t('market:subtitle')}</ThemedText>
         </View>
         {/* Category Tabs */}
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoryContainer}>
@@ -92,7 +94,7 @@ export default function MarketScreen() {
                   selectedCategory === category && styles.categoryTextActive,
                 ]}
               >
-                {category}
+                {t(`market:${category.toLowerCase()}`)}
               </Text>
             </TouchableOpacity>
           ))}
@@ -108,7 +110,7 @@ export default function MarketScreen() {
           <IconSymbol name="magnifyingglass" size={20} color={themeColors.icon} />
           <TextInput
             style={[styles.searchInput, { color: themeColors.text }]}
-            placeholder="Search symbol"
+            placeholder={t('market:searchSymbol')}
             placeholderTextColor={themeColors.tabIconDefault}
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -149,11 +151,11 @@ export default function MarketScreen() {
             </View>
             <View style={styles.symbolActions}>
               <TouchableOpacity style={[styles.actionButton, { borderColor: themeColors.tint }]}>
-                <Text style={[styles.actionText, { color: themeColors.tint }]}>Trade</Text>
+                <Text style={[styles.actionText, { color: themeColors.tint }]}>{t('market:trade')}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={[styles.actionButton, { borderColor: themeColors.tint }]}>
                 <IconSymbol name="bell" size={16} color={themeColors.tint} />
-                <Text style={[styles.actionText, { color: themeColors.tint }]}>Alert</Text>
+                <Text style={[styles.actionText, { color: themeColors.tint }]}>{t('market:alert')}</Text>
               </TouchableOpacity>
             </View>
           </View>

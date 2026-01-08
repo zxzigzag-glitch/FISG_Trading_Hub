@@ -1,5 +1,6 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 
 import { HapticTab } from '@/components/haptic-tab';
@@ -9,6 +10,7 @@ import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { t } = useTranslation();
 
   return (
     <View style={{ flex: 1 }}>
@@ -22,35 +24,35 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: t('tabs:home'),
           tabBarIcon: ({ color }) => <Text style={{ fontSize: 24 }}>🏠</Text>,
         }}
       />
       <Tabs.Screen
         name="market"
         options={{
-          title: 'Market',
+          title: t('tabs:market'),
           tabBarIcon: ({ color }) => <Text style={{ fontSize: 24 }}>📊</Text>,
         }}
       />
       <Tabs.Screen
         name="trade"
         options={{
-          title: 'Trade',
+          title: t('tabs:trade'),
           tabBarIcon: ({ color }) => <Text style={{ fontSize: 24 }}>⚡</Text>,
         }}
       />
       <Tabs.Screen
         name="wallet"
         options={{
-          title: 'Wallet',
+          title: t('tabs:wallet'),
           tabBarIcon: ({ color }) => <Text style={{ fontSize: 24 }}>💰</Text>,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profile',
+          title: t('tabs:profile'),
           tabBarIcon: ({ color }) => <Text style={{ fontSize: 24 }}>👤</Text>,
         }}
       />

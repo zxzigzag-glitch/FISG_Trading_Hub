@@ -1,7 +1,10 @@
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useAppLanguage } from '@/i18n';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Alert, Image, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -11,11 +14,13 @@ export function TopBar() {
   const themeColors = Colors[theme];
   const subtleBorderColor = theme === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.1)';
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const [menuVisible, setMenuVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedAccount, setSelectedAccount] = useState('MT4 - Standard');
   const [balance, setBalance] = useState(1571.25);
-  const [language, setLanguage] = useState('English');
+  const { t } = useTranslation();
+  const { language, setLanguage } = useAppLanguage();
 
   const accounts = [
     { name: 'MT4 - Standard', balance: 1571.25 },
@@ -23,7 +28,7 @@ export function TopBar() {
     { name: 'MT4 - Cent', balance: 500.00 },
   ];
 
-  const languages = ['English', 'ไทย', '中文'];
+  const languageLabel = language === 'th' ? 'ไทย' : 'English';
 
   const handleAccountChange = () => {
     const currentIndex = accounts.findIndex(acc => acc.name === selectedAccount);
@@ -33,17 +38,15 @@ export function TopBar() {
   };
 
   const handleLanguageChange = () => {
-    const currentIndex = languages.indexOf(language);
-    const nextIndex = (currentIndex + 1) % languages.length;
-    setLanguage(languages[nextIndex]);
+    setLanguage(language === 'th' ? 'en' : 'th');
   };
 
   const handleSignOut = () => {
     setMenuVisible(false);
-    Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Sign Out', style: 'destructive', onPress: () => {
-        Alert.alert('Signed Out', 'You have been signed out successfully');
+    Alert.alert(t('topbar:signedOutTitle'), t('topbar:signedOutConfirm'), [
+      { text: t('common:cancel'), style: 'cancel' },
+      { text: t('common:signOut'), style: 'destructive', onPress: () => {
+        router.replace('/(auth)/sign-in');
       }},
     ]);
   };
@@ -64,7 +67,7 @@ export function TopBar() {
             <Ionicons name="search" size={16} color="#fff" />
             <TextInput
               style={styles.searchInput}
-              placeholder="Search prices, news, lessons"
+              placeholder={t('topbar:searchPlaceholder')}
               placeholderTextColor="rgba(255,255,255,0.7)"
               value={searchQuery}
               onChangeText={setSearchQuery}
@@ -109,8 +112,8 @@ export function TopBar() {
 
             {/* Account Info */}
             <View style={styles.menuSection}>
-              <Text style={[styles.menuLabel, { color: themeColors.icon }]}>
-                Trading Account
+              <Text style={[styles.menuLabel, { color: themeColors.icon }]}> 
+                {t('topbar:tradingAccount')}
               </Text>
               <Text style={[styles.accountName, { color: themeColors.text }]}>
                 {selectedAccount}
@@ -128,8 +131,8 @@ export function TopBar() {
               onPress={handleAccountChange}
             >
               <Text style={styles.menuItemIcon}>🔄</Text>
-              <Text style={[styles.menuItemText, { color: themeColors.text }]}>
-                Switch Trading Account
+              <Text style={[styles.menuItemText, { color: themeColors.text }]}> 
+                {t('topbar:switchAccount')}
               </Text>
               <Text style={[styles.menuItemArrow, { color: themeColors.icon }]}>›</Text>
             </TouchableOpacity>
@@ -143,11 +146,11 @@ export function TopBar() {
             >
               <Text style={styles.menuItemIcon}>🌐</Text>
               <View style={styles.menuItemContent}>
-                <Text style={[styles.menuItemText, { color: themeColors.text }]}>
-                  Language
+                <Text style={[styles.menuItemText, { color: themeColors.text }]}> 
+                  {t('common:language')}
                 </Text>
                 <Text style={[styles.menuItemSubtext, { color: themeColors.icon }]}>
-                  {language}
+                  {languageLabel}
                 </Text>
               </View>
               <Text style={[styles.menuItemArrow, { color: themeColors.icon }]}>›</Text>

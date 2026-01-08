@@ -3,7 +3,9 @@ import { ThemedView } from '@/components/themed-view';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/theme';
 import { useColorScheme, useThemePreference } from '@/hooks/use-color-scheme';
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Alert, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 
 export default function ProfileScreen() {
@@ -13,6 +15,8 @@ export default function ProfileScreen() {
   const subtleBorderColor = resolvedScheme === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.1)';
   const subtleFill = resolvedScheme === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)';
   const { preference: themePreference, setPreference: setThemePreference } = useThemePreference();
+  const { t } = useTranslation();
+  const router = useRouter();
   const [notifications, setNotifications] = useState({
     all: true,
     system: true,
@@ -32,12 +36,12 @@ export default function ProfileScreen() {
 
   const handleLogout = () => {
     Alert.alert(
-      'Logout',
-      'Are you sure you want to logout?',
+      t('profile:logout'),
+      t('profile:logoutConfirm'),
       [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Logout', style: 'destructive', onPress: () => {
-          Alert.alert('Logged Out', 'You have been logged out successfully');
+        { text: t('common:cancel'), style: 'cancel' },
+        { text: t('profile:logout'), style: 'destructive', onPress: () => {
+          router.replace('/(auth)/sign-in');
         }},
       ]
     );
@@ -45,12 +49,12 @@ export default function ProfileScreen() {
 
   const handleResetDemo = () => {
     Alert.alert(
-      'Reset Demo Data',
-      'This will reset all demo data. Continue?',
+      t('profile:resetDemo'),
+      t('profile:resetConfirm'),
       [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Reset', style: 'destructive', onPress: () => {
-          Alert.alert('Success', 'Demo data has been reset');
+        { text: t('common:cancel'), style: 'cancel' },
+        { text: t('profile:resetDemo'), style: 'destructive', onPress: () => {
+          Alert.alert(t('common:confirm'), t('profile:resetSuccess'));
         }},
       ]
     );
@@ -60,7 +64,7 @@ export default function ProfileScreen() {
     <ThemedView style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <View style={styles.header}>
-          <ThemedText type="title">Profile</ThemedText>
+          <ThemedText type="title">{t('profile:title')}</ThemedText>
         </View>
         {/* User Card */}
         <View style={[styles.userCard, { backgroundColor: Colors[colorScheme ?? 'light'].tint }]}>
@@ -73,7 +77,7 @@ export default function ProfileScreen() {
           <Text style={styles.userName}>{user.name}</Text>
           <Text style={styles.userEmail}>{user.email}</Text>
           <TouchableOpacity style={styles.editButton}>
-            <Text style={styles.editButtonText}>Edit</Text>
+            <Text style={styles.editButtonText}>{t('profile:edit')}</Text>
           </TouchableOpacity>
           <View style={styles.userStats}>
             <View style={styles.statItem}>
@@ -92,26 +96,26 @@ export default function ProfileScreen() {
 
         {/* Theme Section */}
         <View style={styles.section}>
-          <ThemedText type="subtitle">Theme</ThemedText>
+          <ThemedText type="subtitle">{t('profile:theme')}</ThemedText>
           <View style={styles.themeButtons}>
-            {(['system', 'dark', 'light'] as const).map((t) => (
+            {(['system', 'dark', 'light'] as const).map((t_val) => (
               <TouchableOpacity
-                key={t}
+                key={t_val}
                 style={[
                   styles.themeButton,
                   { backgroundColor: subtleFill },
-                  themePreference === t && { backgroundColor: themeColors.tint },
+                  themePreference === t_val && { backgroundColor: themeColors.tint },
                 ]}
-                onPress={() => setThemePreference(t)}
+                onPress={() => setThemePreference(t_val)}
               >
                 <Text
                   style={[
                     styles.themeButtonText,
                     { color: themeColors.text },
-                    themePreference === t && styles.themeButtonTextActive,
+                    themePreference === t_val && styles.themeButtonTextActive,
                   ]}
                 >
-                  {t.charAt(0).toUpperCase() + t.slice(1)}
+                  {t(`profile:${t_val}`)}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -126,11 +130,11 @@ export default function ProfileScreen() {
           >
             <Text style={styles.menuIcon}>🎓</Text>
             <View style={styles.menuContent}>
-              <ThemedText type="defaultSemiBold">Learn</ThemedText>
-              <Text style={[styles.menuDesc, { color: themeColors.text }]}>Courses, quizzes, bookmarks</Text>
+              <ThemedText type="defaultSemiBold">{t('profile:learn')}</ThemedText>
+              <Text style={[styles.menuDesc, { color: themeColors.text }]}>{t('profile:learnDesc')}</Text>
             </View>
             <TouchableOpacity style={styles.menuButton}>
-              <Text style={[styles.menuButtonText, { color: themeColors.tint }]}>Open</Text>
+              <Text style={[styles.menuButtonText, { color: themeColors.tint }]}>{t('home:open')}</Text>
             </TouchableOpacity>
           </TouchableOpacity>
 
@@ -140,11 +144,11 @@ export default function ProfileScreen() {
           >
             <Text style={styles.menuIcon}>?</Text>
             <View style={styles.menuContent}>
-              <ThemedText type="defaultSemiBold">Support</ThemedText>
-              <Text style={[styles.menuDesc, { color: themeColors.text }]}>Ticket / FAQ (demo)</Text>
+              <ThemedText type="defaultSemiBold">{t('profile:support')}</ThemedText>
+              <Text style={[styles.menuDesc, { color: themeColors.text }]}>{t('profile:supportDesc')}</Text>
             </View>
             <TouchableOpacity style={styles.menuButton}>
-              <Text style={[styles.menuButtonText, { color: themeColors.tint }]}>Open</Text>
+              <Text style={[styles.menuButtonText, { color: themeColors.tint }]}>{t('home:open')}</Text>
             </TouchableOpacity>
           </TouchableOpacity>
 
@@ -154,8 +158,8 @@ export default function ProfileScreen() {
           >
             <IconSymbol name="bell.fill" size={20} color={Colors[colorScheme ?? 'light'].text} />
             <View style={styles.menuContent}>
-              <ThemedText type="defaultSemiBold">Notifications</ThemedText>
-              <Text style={[styles.menuDesc, { color: themeColors.text }]}>Manage alerts & updates</Text>
+              <ThemedText type="defaultSemiBold">{t('profile:notifications')}</ThemedText>
+              <Text style={[styles.menuDesc, { color: themeColors.text }]}>{t('profile:notificationsDesc')}</Text>
             </View>
             <IconSymbol name="chevron.right" size={20} color={Colors[colorScheme ?? 'light'].icon} />
           </TouchableOpacity>
@@ -166,8 +170,8 @@ export default function ProfileScreen() {
           >
             <IconSymbol name="gift.fill" size={20} color={Colors[colorScheme ?? 'light'].text} />
             <View style={styles.menuContent}>
-              <ThemedText type="defaultSemiBold">Rewards & Missions</ThemedText>
-              <Text style={[styles.menuDesc, { color: themeColors.text }]}>Earn points, redeem prizes</Text>
+              <ThemedText type="defaultSemiBold">{t('profile:rewardsMissions')}</ThemedText>
+              <Text style={[styles.menuDesc, { color: themeColors.text }]}>{t('profile:rewardsDesc')}</Text>
             </View>
             <IconSymbol name="chevron.right" size={20} color={Colors[colorScheme ?? 'light'].icon} />
           </TouchableOpacity>
@@ -178,8 +182,8 @@ export default function ProfileScreen() {
           >
             <IconSymbol name="gearshape.fill" size={20} color={Colors[colorScheme ?? 'light'].text} />
             <View style={styles.menuContent}>
-              <ThemedText type="defaultSemiBold">Settings</ThemedText>
-              <Text style={[styles.menuDesc, { color: themeColors.text }]}>Preferences & security</Text>
+              <ThemedText type="defaultSemiBold">{t('profile:settings')}</ThemedText>
+              <Text style={[styles.menuDesc, { color: themeColors.text }]}>{t('profile:settingsDesc')}</Text>
             </View>
             <IconSymbol name="chevron.right" size={20} color={Colors[colorScheme ?? 'light'].icon} />
           </TouchableOpacity>
@@ -187,7 +191,7 @@ export default function ProfileScreen() {
 
         {/* Notification Settings */}
         <View style={styles.section}>
-          <ThemedText type="subtitle">Notification Preferences</ThemedText>
+          <ThemedText type="subtitle">{t('profile:notificationPreferences')}</ThemedText>
           <View style={[styles.notifCard, { backgroundColor: Colors[colorScheme ?? 'light'].cardBackground }]}>
             {Object.entries(notifications).map(([key, value]) => (
               <View key={key} style={styles.notifItem}>
@@ -209,7 +213,7 @@ export default function ProfileScreen() {
             onPress={handleResetDemo}
           >
             <Text style={[styles.actionButtonText, { color: Colors[colorScheme ?? 'light'].tint }]}>
-              Reset demo data
+              {t('profile:resetDemo')}
             </Text>
           </TouchableOpacity>
 
@@ -217,23 +221,23 @@ export default function ProfileScreen() {
             style={[styles.actionButton, { backgroundColor: '#ef4444' }]}
             onPress={handleLogout}
           >
-            <Text style={[styles.actionButtonText, { color: '#fff' }]}>Logout</Text>
+            <Text style={[styles.actionButtonText, { color: '#fff' }]}>{t('profile:logout')}</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.footer}>
-          <Text style={[styles.footerText, { color: themeColors.text }]}>FISG Trading Hub v1.0.0</Text>
+          <Text style={[styles.footerText, { color: themeColors.text }]}>{t('profile:version')}</Text>
           <View style={styles.footerLinks}>
             <TouchableOpacity>
-              <Text style={[styles.footerLink, { color: themeColors.tint }]}>Terms</Text>
+              <Text style={[styles.footerLink, { color: themeColors.tint }]}>{t('profile:terms')}</Text>
             </TouchableOpacity>
             <Text style={[styles.footerDot, { color: themeColors.text }]}>•</Text>
             <TouchableOpacity>
-              <Text style={[styles.footerLink, { color: themeColors.tint }]}>Privacy</Text>
+              <Text style={[styles.footerLink, { color: themeColors.tint }]}>{t('profile:privacy')}</Text>
             </TouchableOpacity>
             <Text style={[styles.footerDot, { color: themeColors.text }]}>•</Text>
             <TouchableOpacity>
-              <Text style={[styles.footerLink, { color: themeColors.tint }]}>Help</Text>
+              <Text style={[styles.footerLink, { color: themeColors.tint }]}>{t('profile:help')}</Text>
             </TouchableOpacity>
           </View>
         </View>

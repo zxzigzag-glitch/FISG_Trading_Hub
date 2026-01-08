@@ -4,6 +4,7 @@ import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 interface Transaction {
@@ -27,6 +28,7 @@ export default function WalletScreen() {
   const [balance] = useState(1571.25);
   const [activeModal, setActiveModal] = useState<ModalType>(null);
   const [kycApproved] = useState(true);
+  const { t } = useTranslation();
   
   const [transactions, setTransactions] = useState<Transaction[]>([
     {

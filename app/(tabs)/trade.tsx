@@ -3,6 +3,7 @@ import { ThemedView } from '@/components/themed-view';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 interface Position {
@@ -30,6 +31,7 @@ export default function TradeScreen() {
   const [stopLoss, setStopLoss] = useState('');
   const [takeProfit, setTakeProfit] = useState('');
   const [comment, setComment] = useState('');
+  const { t } = useTranslation();
   
   const [accountInfo] = useState({
     balance: 1250.50,
@@ -58,29 +60,29 @@ export default function TradeScreen() {
   const handleTrade = (type: 'BUY' | 'SELL') => {
     const lots = parseFloat(volume);
     if (isNaN(lots) || lots <= 0) {
-      Alert.alert('Invalid Volume', 'Please enter a valid lot size');
+      Alert.alert(t('trade:invalidVolume'), t('trade:enterValidLotSize'));
       return;
     }
 
     Alert.alert(
-      'Trade Placed',
-      `${type} ${lots} lots of ${selectedSymbol} at ${currentPrice}`,
+      t('trade:tradePlaced'),
+      t('trade:tradeMessage', { type, lots, symbol: selectedSymbol, price: currentPrice }),
       [{ text: 'OK' }]
     );
   };
 
   const handleClosePosition = (id: string) => {
     Alert.alert(
-      'Close Position',
-      'Are you sure you want to close this position?',
+      t('trade:closePosition'),
+      t('trade:closeConfirm'),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('common:cancel'), style: 'cancel' },
         {
-          text: 'Close',
+          text: t('trade:close'),
           style: 'destructive',
           onPress: () => {
             setPositions(prev => prev.filter(p => p.id !== id));
-            Alert.alert('Success', 'Position closed successfully');
+            Alert.alert(t('common:confirm'), t('trade:positionClosed'));
           },
         },
       ]
@@ -91,12 +93,12 @@ export default function TradeScreen() {
     <ThemedView style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <View style={styles.header}>
-          <ThemedText type="title">Trade (Demo)</ThemedText>
-          <ThemedText style={styles.subtitle}>Market order</ThemedText>
+          <ThemedText type="title">{t('trade:title')}</ThemedText>
+          <ThemedText style={styles.subtitle}>{t('trade:subtitle')}</ThemedText>
         </View>
         {/* Account Selection */}
         <View style={styles.section}>
-          <ThemedText type="subtitle">Account</ThemedText>
+          <ThemedText type="subtitle">{t('trade:account')}</ThemedText>
           <View style={styles.accountButtons}>
             {['MT4', 'MT5'].map((account) => (
               <TouchableOpacity
@@ -126,7 +128,7 @@ export default function TradeScreen() {
 
         {/* Symbol Selection */}
         <View style={styles.section}>
-          <ThemedText type="subtitle">Symbol</ThemedText>
+          <ThemedText type="subtitle">{t('trade:symbol')}</ThemedText>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.symbolScroll}>
             {symbols.map((symbol) => (
               <TouchableOpacity
@@ -156,14 +158,14 @@ export default function TradeScreen() {
 
         {/* Current Price */}
         <View style={[styles.priceCard, { backgroundColor: themeColors.cardBackground }] }>
-          <ThemedText type="subtitle">Quote</ThemedText>
+          <ThemedText type="subtitle">{t('trade:quote')}</ThemedText>
           <ThemedText type="title" style={styles.currentPrice}>{currentPrice}</ThemedText>
-          <Text style={[styles.priceUpdate, { color: themeColors.text }]}>Live • Updates every 10s • 15m</Text>
+          <Text style={[styles.priceUpdate, { color: themeColors.text }]}>{t('trade:liveUpdates')}</Text>
         </View>
 
         {/* Volume Input */}
         <View style={styles.section}>
-          <ThemedText type="subtitle">Volume (Lots)</ThemedText>
+          <ThemedText type="subtitle">{t('trade:volume')}</ThemedText>
           <TextInput
             style={[styles.input, { 
               backgroundColor: themeColors.cardBackground,
@@ -179,7 +181,7 @@ export default function TradeScreen() {
 
         {/* Stop Loss / Take Profit */}
         <View style={styles.section}>
-          <ThemedText type="subtitle">Stop Loss (optional)</ThemedText>
+          <ThemedText type="subtitle">{t('trade:stopLoss')}</ThemedText>
           <TextInput
             style={[styles.input, { 
               backgroundColor: themeColors.cardBackground,
@@ -194,7 +196,7 @@ export default function TradeScreen() {
         </View>
 
         <View style={styles.section}>
-          <ThemedText type="subtitle">Take Profit (optional)</ThemedText>
+          <ThemedText type="subtitle">{t('trade:takeProfit')}</ThemedText>
           <TextInput
             style={[styles.input, { 
               backgroundColor: themeColors.cardBackground,
@@ -209,13 +211,13 @@ export default function TradeScreen() {
         </View>
 
         <View style={styles.section}>
-          <ThemedText type="subtitle">Comment (optional)</ThemedText>
+          <ThemedText type="subtitle">{t('trade:comment')}</ThemedText>
           <TextInput
             style={[styles.input, { 
               backgroundColor: themeColors.cardBackground,
               color: themeColors.text,
             }]}
-            placeholder="Add note..."
+            placeholder={t('trade:addNote')}
             placeholderTextColor={Colors[colorScheme ?? 'light'].tabIconDefault}
             value={comment}
             onChangeText={setComment}
@@ -228,32 +230,32 @@ export default function TradeScreen() {
             style={[styles.tradeButton, styles.buyButton]}
             onPress={() => handleTrade('BUY')}
           >
-            <Text style={styles.tradeButtonText}>Buy</Text>
+            <Text style={styles.tradeButtonText}>{t('trade:buy')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.tradeButton, styles.sellButton]}
             onPress={() => handleTrade('SELL')}
           >
-            <Text style={styles.tradeButtonText}>Sell</Text>
+            <Text style={styles.tradeButtonText}>{t('trade:sell')}</Text>
           </TouchableOpacity>
         </View>
 
         {/* Account Info */}
         <View style={[styles.accountInfo, { backgroundColor: themeColors.cardBackground }]}>
           <View style={styles.infoRow}>
-            <Text style={[styles.infoLabel, { color: themeColors.text }]}>Balance</Text>
+            <Text style={[styles.infoLabel, { color: themeColors.text }]}>{t('trade:balance')}</Text>
             <ThemedText type="defaultSemiBold">${accountInfo.balance.toFixed(2)}</ThemedText>
           </View>
           <View style={styles.infoRow}>
-            <Text style={[styles.infoLabel, { color: themeColors.text }]}>Equity</Text>
+            <Text style={[styles.infoLabel, { color: themeColors.text }]}>{t('trade:equity')}</Text>
             <ThemedText type="defaultSemiBold">${accountInfo.equity.toFixed(2)}</ThemedText>
           </View>
           <View style={styles.infoRow}>
-            <Text style={[styles.infoLabel, { color: themeColors.text }]}>Margin</Text>
+            <Text style={[styles.infoLabel, { color: themeColors.text }]}>{t('trade:margin')}</Text>
             <ThemedText type="defaultSemiBold">${accountInfo.margin.toFixed(2)}</ThemedText>
           </View>
           <View style={styles.infoRow}>
-            <Text style={[styles.infoLabel, { color: themeColors.text }]}>Free Margin</Text>
+            <Text style={[styles.infoLabel, { color: themeColors.text }]}>{t('trade:freeMargin')}</Text>
             <ThemedText type="defaultSemiBold">${accountInfo.freeMargin.toFixed(2)}</ThemedText>
           </View>
         </View>
@@ -261,11 +263,11 @@ export default function TradeScreen() {
         {/* Tip */}
         <View style={[styles.tipCard, { backgroundColor: 'rgba(59, 130, 246, 0.1)' }]}>
           <ThemedText style={styles.tipText}>
-            💡 This is a UI simulator for review. Not connected to real MT execution.
+            {t('trade:tipTitle')}
           </ThemedText>
           <TouchableOpacity style={styles.mtLink}>
             <Text style={[styles.mtLinkText, { color: themeColors.tint }]}>
-              Open MT4/MT5
+              {t('trade:openMT')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -273,7 +275,7 @@ export default function TradeScreen() {
         {/* Open Positions */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <ThemedText type="subtitle">Open Positions</ThemedText>
+            <ThemedText type="subtitle">{t('trade:openPositions')}</ThemedText>
             <View style={styles.badge}>
               <Text style={styles.badgeText}>{positions.length}</Text>
             </View>
@@ -293,10 +295,10 @@ export default function TradeScreen() {
                     {position.type === 'BUY' ? '▲' : '▼'} {position.symbol}
                   </ThemedText>
                   <Text style={[styles.positionDetails, { color: themeColors.text }]}>
-                    {position.type} • {position.lots} lots
+                    {position.type} • {position.lots} {t('trade:lots')}
                   </Text>
                   <Text style={[styles.positionTime, { color: themeColors.text }]}>
-                    Open {position.openTime} @ {position.openPrice}
+                    {t('trade:open')} {position.openTime} @ {position.openPrice}
                   </Text>
                   <Text style={[styles.positionSLTP, { color: themeColors.text }]}>
                     SL {position.sl ?? '—'} • TP {position.tp ?? '—'}
@@ -311,7 +313,7 @@ export default function TradeScreen() {
                     onPress={() => handleClosePosition(position.id)}
                   >
                     <Text style={[styles.closeButtonText, { color: themeColors.tint }]}>
-                      Close
+                      {t('trade:close')}
                     </Text>
                   </TouchableOpacity>
                 </View>

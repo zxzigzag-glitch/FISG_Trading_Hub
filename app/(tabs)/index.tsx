@@ -4,6 +4,7 @@ import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface ChecklistItem {
@@ -36,14 +37,15 @@ export default function HomeScreen() {
   const subtleBorderColor = theme === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.1)';
   const subtleFill = theme === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)';
   const [refreshing, setRefreshing] = useState(false);
+  const { t } = useTranslation();
 
   const checklist: ChecklistItem[] = [
-    { id: '1', title: 'Register / Login', subtitle: 'Account created', status: 'completed', icon: '✓' },
-    { id: '2', title: 'KYC Verification', subtitle: 'Verified', status: 'completed', icon: '✓' },
-    { id: '3', title: 'Open Trading Account', subtitle: 'Account active', status: 'completed', icon: '✓' },
-    { id: '4', title: 'Deposit', subtitle: 'Done', status: 'completed', icon: '✓' },
-    { id: '5', title: 'Trade', subtitle: 'Done', status: 'completed', icon: '✓' },
-    { id: '6', title: 'Rewards', subtitle: 'Claim missions & redeem points', status: 'active', icon: '6' },
+    { id: '1', title: t('home:register'), subtitle: t('home:accountCreated'), status: 'completed', icon: '✓' },
+    { id: '2', title: t('home:kycVerification'), subtitle: t('home:verified'), status: 'completed', icon: '✓' },
+    { id: '3', title: t('home:openTradingAccount'), subtitle: t('home:accountActive'), status: 'completed', icon: '✓' },
+    { id: '4', title: t('home:deposit'), subtitle: t('home:done'), status: 'completed', icon: '✓' },
+    { id: '5', title: t('home:trade'), subtitle: t('home:done'), status: 'completed', icon: '✓' },
+    { id: '6', title: t('home:rewards'), subtitle: t('home:claimMissions'), status: 'active', icon: '6' },
   ];
 
   const marketSnapshot: MarketSnapshot[] = [
@@ -76,10 +78,10 @@ export default function HomeScreen() {
   ];
 
   const quickActions = [
-    { id: '1', icon: 'ID', title: 'KYC: Approved', subtitle: 'KYC Verification', status: 'Verified ✓', color: '#10b981' },
-    { id: '2', icon: '$', title: 'Wallet', subtitle: 'Deposit / Withdraw status', balance: '$1571.25', color: '#3b82f6' },
-    { id: '3', icon: '🎓', title: 'Learn', subtitle: 'Lessons • Quizzes • Progress', action: 'Open', color: '#8b5cf6' },
-    { id: '4', icon: '⚡', title: 'Light Trading (Demo)', subtitle: 'Market order • Close position • P/L', action: 'Trade', color: '#f59e0b' },
+    { id: '1', icon: 'ID', title: t('home:kycApproved'), subtitle: t('home:kycVerificationLabel'), status: t('home:verifiedStatus'), color: '#10b981' },
+    { id: '2', icon: '$', title: t('home:walletLabel'), subtitle: t('home:depositWithdrawStatus'), balance: '$1571.25', color: '#3b82f6' },
+    { id: '3', icon: '🎓', title: t('home:learnLabel'), subtitle: t('home:lessonsQuizzesProgress'), action: t('home:openAction'), color: '#8b5cf6' },
+    { id: '4', icon: '⚡', title: t('home:lightTrading'), subtitle: t('home:marketOrderClose'), action: t('home:tradeAction'), color: '#f59e0b' },
   ];
 
   const onRefresh = () => {
@@ -95,9 +97,9 @@ export default function HomeScreen() {
       >
         <View style={styles.header}>
           <View>
-            <ThemedText type="title">Welcome back, Araya K.</ThemedText>
+            <ThemedText type="title">{t('home:welcome', { name: 'Araya K.' })}</ThemedText>
             <Text style={[styles.subtitle, { color: themeColors.text }]}>
-              Clear journey: Register → KYC → Open Account → Deposit → Trade → Rewards.
+              {t('home:subtitle')}
             </Text>
           </View>
         </View>
@@ -153,14 +155,14 @@ export default function HomeScreen() {
           <TouchableOpacity
             style={[styles.continueButton, { backgroundColor: themeColors.tint }]}
           >
-            <Text style={styles.continueButtonText}>Market</Text>
-            <Text style={styles.continueButtonLabel}>Continue</Text>
+            <Text style={styles.continueButtonText}>{t('home:continueMarket')}</Text>
+            <Text style={styles.continueButtonLabel}>{t('home:continue')}</Text>
           </TouchableOpacity>
         </View>
 
         {/* Quick Actions */}
         <View style={styles.section}>
-          <ThemedText type="subtitle">Quick Actions</ThemedText>
+          <ThemedText type="subtitle">{t('home:quickActions')}</ThemedText>
           <View style={styles.quickActionsGrid}>
             {quickActions.map((action) => (
               <TouchableOpacity
@@ -194,7 +196,7 @@ export default function HomeScreen() {
         {/* Market Snapshot */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <ThemedText type="subtitle">Market Snapshot</ThemedText>
+            <ThemedText type="subtitle">{t('home:marketSnapshot')}</ThemedText>
             <View style={styles.timeframeTabs}>
               {['15m', '1h', '4h'].map((tf) => (
                 <Text
@@ -235,9 +237,9 @@ export default function HomeScreen() {
         {/* What's New */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <ThemedText type="subtitle">What's new</ThemedText>
+            <ThemedText type="subtitle">{t('home:whatsNew')}</ThemedText>
             <TouchableOpacity>
-              <Text style={[styles.viewAll, { color: themeColors.tint }]}>View all</Text>
+              <Text style={[styles.viewAll, { color: themeColors.tint }]}>{t('home:viewAll')}</Text>
             </TouchableOpacity>
           </View>
 
@@ -271,13 +273,13 @@ export default function HomeScreen() {
         <View style={styles.section}>
           <View style={[styles.rewardsCard, { backgroundColor: themeColors.tint }]}>
             <View style={styles.rewardsHeader}>
-              <Text style={styles.rewardsTitle}>Rewards</Text>
-              <Text style={styles.rewardsPoints}>220 pts</Text>
+              <Text style={styles.rewardsTitle}>{t('home:rewardsTitle')}</Text>
+              <Text style={styles.rewardsPoints}>{t('home:points', { count: 220 })}</Text>
             </View>
-            <Text style={styles.rewardsSubtitle}>Missions</Text>
-            <Text style={styles.rewardsDesc}>Complete actions to earn points.</Text>
+            <Text style={styles.rewardsSubtitle}>{t('home:missions')}</Text>
+            <Text style={styles.rewardsDesc}>{t('home:completeActions')}</Text>
             <TouchableOpacity style={styles.rewardsButton}>
-              <Text style={styles.rewardsButtonText}>Open</Text>
+              <Text style={styles.rewardsButtonText}>{t('home:open')}</Text>
             </TouchableOpacity>
             <View style={styles.rewardsMissions}>
               <Text style={styles.missionItem}>KYC ✓</Text>
